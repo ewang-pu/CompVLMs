@@ -7,6 +7,7 @@ from tqdm import tqdm
 import torch.nn.functional as F
 from .blip_utils.blip_retrieval import blip_retrieval
 from .blip_utils.utils import MetricLogger
+import requests
 
 
 # All of the below URLs are taken from, and most of the implementation are heavily inspired from the wonderful https://github.com/salesforce/BLIP repo.
@@ -48,15 +49,34 @@ class BLIPModelWrapper:
         self.device = device
     
     
+    # def download(self):
+    #     print(f"Downloading BLIP model to {self.root_dir}...")
+    #     model_url = download_urls[self.variant]["model_url"]
+    #     config_url = download_urls[self.variant]["config_url"]
+    #     bert_config_url = download_urls[self.variant]["bert_config_url"]
+    #     os.makedirs(os.path.join(self.root_dir, "configs"), exist_ok=True)
+    #     subprocess.call(["wget", "-c", model_url, "-O", self.model_path])
+    #     subprocess.call(["wget", "-c", config_url, "-O", self.config_path])
+    #     subprocess.call(["wget", "-c", bert_config_url, "-O", self.bert_config_path])
+
     def download(self):
         print(f"Downloading BLIP model to {self.root_dir}...")
         model_url = download_urls[self.variant]["model_url"]
         config_url = download_urls[self.variant]["config_url"]
         bert_config_url = download_urls[self.variant]["bert_config_url"]
         os.makedirs(os.path.join(self.root_dir, "configs"), exist_ok=True)
-        subprocess.call(["wget", "-c", model_url, "-O", self.model_path])
-        subprocess.call(["wget", "-c", config_url, "-O", self.config_path])
-        subprocess.call(["wget", "-c", bert_config_url, "-O", self.bert_config_path])
+        
+        # Helper function to download a file using requests
+        def download_file(url, save_path):
+            with requests.get(url, stream=True) as response:
+                response.raise_for_status()  # Raise an exception for HTTP errors
+                with open(save_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        file.write(chunk)
+
+        download_file(model_url, self.model_path)
+        download_file(config_url, self.config_path)
+        download_file(bert_config_url, self.bert_config_path)
         
         
     @torch.no_grad()

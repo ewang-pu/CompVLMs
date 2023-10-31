@@ -1,0 +1,62 @@
+from transformers import ViltProcessor, ViltForImageAndTextRetrieval
+import torch.nn.functional as F
+import numpy as np
+from tqdm import tqdm
+import torch
+
+class ViLTWrapper:
+    def __init__(self, model, processor, device):
+        self.model = model
+        self.device = device
+        self.processor = processor
+
+    def tokenize(self, texts):
+        return self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
+
+    def get_text_embeddings(self, texts):
+        inputs = self.tokenize(texts)
+        outputs = self.model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"])
+        return outputs.last_hidden_state
+
+    def get_image_embeddings(self, images):
+        # Assumes images are already preprocessed
+        outputs = self.model(images=images)
+        return outputs.last_hidden_state
+
+    def get_retrieval_scores(self, texts, images):
+        text_embeddings = self.get_text_embeddings(texts)
+        image_embeddings = self.get_image_embeddings(images)
+        scores = F.cosine_similarity(text_embeddings, image_embeddings)
+        return scores
+    
+    @torch.no_grad()
+    def get_retrieval_scores_batched(self, joint_loader):
+
+
+        tqdm_loader = tqdm(joint_loader)
+        tqdm_loader.set_description("Computing retrieval scores")
+        
+
+        scores = []
+        # Iterate over the batched data
+        for batch in tqdm_loader:
+            batch_scores = []
+            for i_option in batch["image_options"]: 
+                im_scores = []
+                for c_option in batch["caption_options"]:
+                    inputs = self.processor(images=i_option, text = c_option, return_tensors="pt", padding=True, truncation=True)
+
+                    outputs = self.model(**inputs)
+
+                    score = F.softmax(outputs.logits, dim=-1)[:, 1:2].cpu().numpy()
+                    im_scores.append(np.expand_dims(score, -1))
+
+                batch_scores.append(np.concatenate(im_scores, axis=-1))
+
+            batch_scores = np.concatenate(batch_scores, axis=1)
+            scores.append(batch_scores)
+        
+            scores.append(scores)
+        
+        all_scores = np.concatenate(scores, axis=0) # N x K x L
+        return all_scores

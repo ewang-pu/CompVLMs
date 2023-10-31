@@ -3,6 +3,7 @@ import clip
 from PIL import Image
 from torchvision import transforms
 from .constants import CACHE_DIR
+from transformers import ViltProcessor, ViltForImageAndTextRetrieval, ViltImageProcessor
 
 
 def get_model(model_name, device, root_dir=CACHE_DIR):
@@ -16,6 +17,18 @@ def get_model(model_name, device, root_dir=CACHE_DIR):
         model = model.eval()
         clip_model = CLIPWrapper(model, device) 
         return clip_model, image_preprocess
+    
+    elif "vilt" in model_name:
+        from .vilt_models import ViLTWrapper
+        processor = ViltProcessor.from_pretrained(model_name)
+        image_processor = ViltImageProcessor.from_pretrained(model_name)
+        model = ViltForImageAndTextRetrieval.from_pretrained(model_name)
+        vilt_model = ViLTWrapper(model, processor, device = device)
+        image_preprocess = transforms.Compose([
+                        transforms.Resize((384, 384),interpolation=transforms.functional.InterpolationMode.BICUBIC),
+                        transforms.ToTensor()])  
+        return vilt_model, image_preprocess
+
 
     elif model_name == "blip-flickr-base":
         from .blip_models import BLIPModelWrapper
