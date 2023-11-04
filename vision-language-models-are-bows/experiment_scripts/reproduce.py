@@ -17,7 +17,7 @@ def main():
 
     # Get the VG-R dataset
     vgr_dataset = VG_Relation(
-        image_preprocess=preprocess, download=False, root_dir=root_dir
+        image_preprocess=preprocess, download=True, root_dir=root_dir
     )
     vgr_loader = DataLoader(vgr_dataset, batch_size=16, shuffle=False)
 
