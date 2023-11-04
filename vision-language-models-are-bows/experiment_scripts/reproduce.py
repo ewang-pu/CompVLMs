@@ -10,7 +10,7 @@ from transformers import ViltProcessor, ViltForImageAndTextRetrieval
 
 
 def main():
-    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/data2"
+    root_dir = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/data2"
 
     model, preprocess = get_model(
         model_name="openai-clip:ViT-B/32", device="cuda", root_dir=root_dir
