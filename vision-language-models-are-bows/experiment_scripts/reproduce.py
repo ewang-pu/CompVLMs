@@ -1,6 +1,7 @@
 import sys
 
 sys.path.append("..")
+sys.path.append("vision-language-models-are-bows")
 import pandas as pd
 from torch.utils.data import DataLoader
 from model_zoo import get_model
