@@ -4,6 +4,7 @@ import numpy as np
 from tqdm import tqdm
 import torch
 
+
 class ViLTWrapper:
     def __init__(self, model, processor, device):
         self.model = model
@@ -15,7 +16,9 @@ class ViLTWrapper:
 
     def get_text_embeddings(self, texts):
         inputs = self.tokenize(texts)
-        outputs = self.model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"])
+        outputs = self.model(
+            input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
+        )
         return outputs.last_hidden_state
 
     def get_image_embeddings(self, images):
@@ -28,35 +31,43 @@ class ViLTWrapper:
         image_embeddings = self.get_image_embeddings(images)
         scores = F.cosine_similarity(text_embeddings, image_embeddings)
         return scores
-    
+
     @torch.no_grad()
     def get_retrieval_scores_batched(self, joint_loader):
-
-
         tqdm_loader = tqdm(joint_loader)
         tqdm_loader.set_description("Computing retrieval scores")
-        
 
         scores = []
         # Iterate over the batched data
         for batch in tqdm_loader:
             batch_scores = []
-            for i_option in batch["image_options"]: 
-                im_scores = []
-                for c_option in batch["caption_options"]:
-                    inputs = self.processor(images=i_option, text = c_option, return_tensors="pt", padding=True, truncation=True)
+            i_options = batch["image_options"][0]
+            c_options0 = batch["caption_options"][0]
+            c_options1 = batch["caption_options"][1]
+            for i in range(len(i_options)):
+                inputs0 = self.processor(
+                    images=i_options[i],
+                    text=c_options0[i],
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                )
+                inputs1 = self.processor(
+                    images=i_options[i],
+                    text=c_options1[i],
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                )
 
-                    outputs = self.model(**inputs)
+                outputs0 = self.model(**inputs0)
+                outputs1 = self.model(**inputs1)
 
-                    score = F.softmax(outputs.logits, dim=-1)[:, 1:2].cpu().numpy()
-                    im_scores.append(np.expand_dims(score, -1))
+                batch_scores.append([outputs0, outputs1])  # B x L (16x2)
 
-                batch_scores.append(np.concatenate(im_scores, axis=-1))
+            batch_scores = np.expand_dims(batch_scores, axis=1)  # B x K x L (16x1x2)
 
-            batch_scores = np.concatenate(batch_scores, axis=1)
             scores.append(batch_scores)
-        
-            scores.append(scores)
-        
-        all_scores = np.concatenate(scores, axis=0) # N x K x L
+
+        all_scores = np.concatenate(scores, axis=0)  # N x K x L
         return all_scores
