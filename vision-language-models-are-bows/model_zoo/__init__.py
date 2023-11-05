@@ -25,13 +25,13 @@ def get_model(model_name, device, root_dir=CACHE_DIR):
         from .vilt_models import ViLTWrapper
 
         processor = ViltProcessor.from_pretrained(
-            "../model_zoo/vilt-b32-finetuned-coco"
+            "vision-language-models-are-bows/model_zoo/vilt-b32-finetuned-coco"
         )
-        image_processor = ViltImageProcessor.from_pretrained(
-            "../model_zoo/vilt-b32-finetuned-coco"
-        )
+        # image_processor = ViltImageProcessor.from_pretrained(
+        #     "../model_zoo/vilt-b32-finetuned-coco"
+        # )
         model = ViltForImageAndTextRetrieval.from_pretrained(
-            "../model_zoo/vilt-b32-finetuned-coco"
+            "vision-language-models-are-bows/model_zoo/vilt-b32-finetuned-coco"
         )
         vilt_model = ViLTWrapper(model, processor, device=device)
         image_preprocess = transforms.Compose(
