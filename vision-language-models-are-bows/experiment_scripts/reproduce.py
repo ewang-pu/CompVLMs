@@ -209,7 +209,7 @@ def main():
     vga_records = vga_dataset.evaluate_scores(vga_scores)
     df = pd.DataFrame(vga_records)
     print(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
-    with open("VGA.txt", "a") as f:
+    with open("results.txt", "a") as f:
         f.write(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
 
 
