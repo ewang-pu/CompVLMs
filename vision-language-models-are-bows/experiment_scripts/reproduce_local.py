@@ -30,7 +30,7 @@ def main():
         image_preprocess=preprocess, download=False, root_dir=root_dir
     )
 
-    subset_size = int(len(vgr_dataset) * 0.01)
+    subset_size = int(len(vgr_dataset) * 0.001)
 
     subset_dataset = Subset(vgr_dataset, np.arange(subset_size))
 
@@ -40,7 +40,7 @@ def main():
     vgr_scores = model.get_retrieval_scores_batched(vgr_loader)
 
     # Evaluate the macro accuracy
-    vgr_records = vgr_dataset.evaluate_scores(vgr_scores)
+    vgr_records = vgr_dataset.evaluate_scores_accuracy(vgr_scores)
     symmetric = [
         "adjusting",
         "attached to",
@@ -200,11 +200,40 @@ def main():
         "on the side of",
         "around",
     ]
-    df = pd.DataFrame(vgr_records)
-    df = df[~df.Relation.isin(symmetric)]
 
-    with open("test.txt", "w") as f:
-        f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}")
+    accuracy = vgr_records["Accuracy"]
+    with open("results.txt", "w") as f:
+        f.write("VGR Accuracy: " + str(accuracy) + "\n")
+
+    # df = pd.DataFrame(vgr_records)
+    # df = df[~df.Relation.isin(symmetric)]
+
+    # print(vgr_records["Accuracy"])
+
+    # with open("test.txt", "w") as f:
+    #     f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}")
+
+    #     vgr_records["Accuracy"]
+
+    # Get the VG-A dataset
+
+    vga_dataset = VG_Attribution(
+        image_preprocess=preprocess, download=False, root_dir=root_dir
+    )
+
+    subset_size = int(len(vga_dataset) * 0.001)
+
+    subset_dataset = Subset(vga_dataset, np.arange(subset_size))
+
+    vga_loader = DataLoader(subset_dataset, batch_size=16, shuffle=False)
+    # Compute the scores for each test case
+    vga_scores = model.get_retrieval_scores_batched(vga_loader)
+
+    vga_records = vga_dataset.evaluate_scores_accuracy(vga_scores)
+
+    accuracy = vga_records["Accuracy"]
+    with open("results.txt", "a") as f:
+        f.write(f"\nVG-Attribution Macro Accuracy: {accuracy}\ntest")
 
 
 if __name__ == "__main__":

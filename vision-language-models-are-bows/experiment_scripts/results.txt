@@ -1,0 +1,4 @@
+VGR Accuracy: 0.34782608695652173
+
+VG-Attribution Macro Accuracy: 0.5714285714285714
+test

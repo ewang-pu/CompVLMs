@@ -194,8 +194,23 @@ def main():
     df = pd.DataFrame(vgr_records)
     df = df[~df.Relation.isin(symmetric)]
 
-    with open("test.txt", "w") as f:
-        f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}")
+    with open("results.txt", "w") as f:
+        f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}\n")
+
+    vga_dataset = VG_Attribution(
+        image_preprocess=preprocess, download=False, root_dir=root_dir
+    )
+
+    vga_loader = DataLoader(vga_dataset, batch_size=16, shuffle=False)
+    # Compute the scores for each test case
+    vga_scores = model.get_retrieval_scores_batched(vga_loader)
+
+    # Evaluate the macro accuracy
+    vga_records = vga_dataset.evaluate_scores(vga_scores)
+    df = pd.DataFrame(vga_records)
+    print(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
+    with open("VGA.txt", "a") as f:
+        f.write(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
 
 
 if __name__ == "__main__":
