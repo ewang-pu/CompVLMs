@@ -42,6 +42,7 @@ class ViLTWrapper:
         for batch in tqdm_loader:
             batch_scores = []
             i_options = batch["image_options"][0]
+            i_options = i_options.to(self.device)
             c_options0 = batch["caption_options"][0]
             c_options1 = batch["caption_options"][1]
             for i in range(len(i_options)):
@@ -59,6 +60,9 @@ class ViLTWrapper:
                     padding=True,
                     truncation=True,
                 )
+
+                inputs0 = inputs0.to(self.device)
+                inputs1 = inputs1.to(self.device)
 
                 outputs0 = self.model(**inputs0)
                 outputs1 = self.model(**inputs1)

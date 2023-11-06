@@ -19,6 +19,8 @@ def main():
     #     model_name="openai-clip:ViT-B/32", device="cuda", root_dir=root_dir
     # )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    print("Using device: ", device)
     model, preprocess = get_model(
         model_name="../model_zoo/vilt-b32-finetuned-coco",
         device=device,
@@ -30,11 +32,13 @@ def main():
         image_preprocess=preprocess, download=False, root_dir=root_dir
     )
 
-    subset_size = int(len(vgr_dataset) * 0.001)
+    subset_size = int(len(vgr_dataset) * 0.25)
 
     subset_dataset = Subset(vgr_dataset, np.arange(subset_size))
 
-    vgr_loader = DataLoader(subset_dataset, batch_size=16, shuffle=False)
+    vgr_loader = DataLoader(
+        subset_dataset, batch_size=16, shuffle=False, pin_memory=True
+    )
 
     # Compute the scores for each test case
     vgr_scores = model.get_retrieval_scores_batched(vgr_loader)
@@ -221,7 +225,7 @@ def main():
         image_preprocess=preprocess, download=False, root_dir=root_dir
     )
 
-    subset_size = int(len(vga_dataset) * 0.001)
+    subset_size = int(len(vga_dataset) * 0.25)
 
     subset_dataset = Subset(vga_dataset, np.arange(subset_size))
 
@@ -233,7 +237,7 @@ def main():
 
     accuracy = vga_records["Accuracy"]
     with open("results.txt", "a") as f:
-        f.write(f"\nVG-Attribution Macro Accuracy: {accuracy}\ntest")
+        f.write(f"\nVG-Attribution Macro Accuracy: {accuracy}\n")
 
 
 if __name__ == "__main__":
