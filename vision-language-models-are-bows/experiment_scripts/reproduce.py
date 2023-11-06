@@ -18,7 +18,9 @@ def main():
     # )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, preprocess = get_model(
-        model_name="dandelin/vilt-b32-finetuned-coco", device=device, root_dir=root_dir
+        model_name="vision-language-models-are-bows/model_zoo/vilt-b32-finetuned-coco",
+        device=device,
+        root_dir=root_dir,
     )
 
     # Get the VG-R dataset
