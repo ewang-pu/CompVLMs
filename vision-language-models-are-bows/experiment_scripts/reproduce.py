@@ -1,4 +1,5 @@
 import sys
+import torch
 
 sys.path.append("..")
 sys.path.append("vision-language-models-are-bows")
@@ -15,9 +16,9 @@ def main():
     # model, preprocess = get_model(
     #     model_name="openai-clip:ViT-B/32", device="cuda", root_dir=root_dir
     # )
-
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, preprocess = get_model(
-        model_name="dandelin/vilt-b32-finetuned-coco", device="cuda", root_dir=root_dir
+        model_name="dandelin/vilt-b32-finetuned-coco", device=device, root_dir=root_dir
     )
 
     # Get the VG-R dataset
