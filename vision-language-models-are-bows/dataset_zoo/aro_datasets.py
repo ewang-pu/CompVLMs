@@ -168,6 +168,24 @@ class VG_Relation(Dataset):
             )
         return result_records
 
+    def evaluate_scores_accuracy(self, scores):
+        """
+        Scores: N x 1 x 2, i.e. first caption is the perturbed one, second is the positive one
+        """
+        if isinstance(scores, tuple):
+            scores_i2t = scores[1]
+            scores_t2i = scores[0]
+        else:
+            scores_t2i = scores
+            scores_i2t = scores
+
+        metrics = {"Accuracy": None}
+        preds = np.argmax(np.squeeze(scores_i2t, axis=1), axis=-1)
+        correct_mask = preds == 1
+        metrics["Accuracy"] = np.mean(correct_mask)
+
+        return metrics
+
 
 class VG_Attribution(Dataset):
     def __init__(

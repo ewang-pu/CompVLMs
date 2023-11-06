@@ -63,7 +63,10 @@ class ViLTWrapper:
                 outputs0 = self.model(**inputs0)
                 outputs1 = self.model(**inputs1)
 
-                batch_scores.append([outputs0, outputs1])  # B x L (16x2)
+                score0 = outputs0.logits[:, 0].item()
+                score1 = outputs1.logits[:, 0].item()
+
+                batch_scores.append([score0, score1])  # B x L (16x2)
 
             batch_scores = np.expand_dims(batch_scores, axis=1)  # B x K x L (16x1x2)
 
