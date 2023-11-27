@@ -32,7 +32,7 @@ def main():
     local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_model"
     local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
 
-    current = os.path.abspath(__file__)
+    current = os.getcwd()
 
     model = GPT2LMHeadModel.from_pretrained(
         relpath(
