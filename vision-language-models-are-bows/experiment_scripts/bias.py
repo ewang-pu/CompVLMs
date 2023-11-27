@@ -18,27 +18,32 @@ def get_sequence_likelihood(sentence, model, tokenizer):
     return torch.exp(-loss).item()
 
 
-def get_prob(captions, model, tokenizer):
+def get_prob(captions0, captions1, model, tokenizer):
     # tqdm_loader.set_description("Computing retrieval scores")
-    probs = np.empty(len(captions))
+    probs0 = torch.empty(len(captions0))
+    probs1 = torch.empty(len(captions1))
 
-    for i, _ in enumerate(tqdm(captions)):
-        probs[i] = get_sequence_likelihood(captions[i], model, tokenizer)
+    probs0.to("cuda")
+    probs1.to("cuda")
 
-    return probs
+    for i, _ in enumerate(tqdm(captions0)):
+        probs0[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
+        probs1[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
+
+    return probs0, probs1
 
 
 def main():
     local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
     local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
 
-    current = os.getcwd()
-    model_rel = relpath(
-        local_model_path,
-        current,
-    )
+    # current = os.getcwd()
+    # model_rel = relpath(
+    #     local_model_path,
+    #     current,
+    # )
 
-    tokenizer_rel = relpath(local_tokenizer_path, current)
+    # tokenizer_rel = relpath(local_tokenizer_path, current)
     model = GPT2LMHeadModel.from_pretrained(local_model_path)
 
     tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
@@ -59,8 +64,7 @@ def main():
     with open(file1, "r", encoding="utf-8") as file:
         captions1 = json.load(file)
 
-    probs0 = get_prob(captions0, model, tokenizer)
-    probs1 = get_prob(captions1, model, tokenizer)
+    probs0, probs1 = get_prob(captions0, captions1, model, tokenizer)
 
     np.savez("probabilities.npz", array0=probs0, array1=probs1)
 
