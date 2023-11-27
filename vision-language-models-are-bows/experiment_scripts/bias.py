@@ -28,10 +28,10 @@ def get_prob(captions, model, tokenizer):
 
 
 def main():
-    # Load pre-trained model and tokenizer
-    model_name = "gpt2"
-    model = GPT2LMHeadModel.from_pretrained(model_name)
-    tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+    local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/model_zoo/local_models/gpt2/gpt2_model"
+    local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/model_zoo/local_models/gpt2/gpt2_tokenizer"
+    model = GPT2LMHeadModel.from_pretrained(local_model_path)
+    tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
 
     # load in data
     # root_dir = (
