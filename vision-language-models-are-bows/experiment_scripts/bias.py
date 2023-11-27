@@ -7,6 +7,7 @@ import numpy as np
 import json
 import os
 from tqdm import tqdm
+from os.path import relpath
 
 
 # Function to get the likelihood of a sequence of words
@@ -28,17 +29,33 @@ def get_prob(captions, model, tokenizer):
 
 
 def main():
-    local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/model_zoo/local_models/gpt2/gpt2_model"
-    local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/model_zoo/local_models/gpt2/gpt2_tokenizer"
-    model = GPT2LMHeadModel.from_pretrained(local_model_path)
-    tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
+    local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_model"
+    local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
+
+    current = os.path.abspath(__file__)
+
+    model = GPT2LMHeadModel.from_pretrained(
+        relpath(
+            local_model_path,
+            current,
+        )
+    )
+
+    tokenizer = GPT2Tokenizer.from_pretrained(
+        relpath(
+            local_tokenizer_path,
+            current,
+        )
+    )
 
     # load in data
     # root_dir = (
     #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
     # )
 
-    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/tool_scripts"
+    root_dir = (
+        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
+    )
     file0 = os.path.join(root_dir, "true_captions.json")
     with open(file0, "r", encoding="utf-8") as file:
         captions0 = json.load(file)
