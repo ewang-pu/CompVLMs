@@ -7,7 +7,7 @@ import torch
 
 class ViLTWrapper:
     def __init__(self, model, processor, device):
-        self.model = model
+        self.model = model.to(device)
         self.device = device
         self.processor = processor
 

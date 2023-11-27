@@ -1,29 +1,58 @@
 import sys
 import torch
+import argparse
 
 sys.path.append("..")
 sys.path.append("vision-language-models-are-bows")
 import pandas as pd
 from torch.utils.data import DataLoader
 from model_zoo import get_model
-from dataset_zoo import VG_Relation, VG_Attribution
+from dataset_zoo import VG_Relation, VG_Attribution, COCO_Order, Flickr30k_Order
 from transformers import ViltProcessor, ViltForImageAndTextRetrieval
 
 
-def main():
-    root_dir = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/data"
+def config():
+    parser = argparse.ArgumentParser()
+    # parser.add_argument("--device", default="cuda", type=str)
+    # parser.add_argument("--batch-size", default=32, type=int)
+    # parser.add_argument("--num_workers", default=4, type=int)
+    parser.add_argument("--model_name", default="openai-clip:ViT-B/32", type=str)
+    # parser.add_argument(
+    #     "--dataset",
+    #     default="VG_Relation",
+    #     type=str,
+    #     choices=["VG_Relation", "VG_Attribution", "COCO_Order", "Flickr30k_Order"],
+    # )
+    # parser.add_argument("--seed", default=1, type=int)
 
+    # parser.add_argument(
+    #     "--download",
+    #     action="store_true",
+    #     help="Whether to download the dataset if it doesn't exist. (Default: False)",
+    # )
+    # parser.add_argument(
+    #     "--save-scores",
+    #     action="store_true",
+    #     help="Whether to save the scores for the retrieval to analyze later.",
+    # )
+    # parser.add_argument("--output-dir", default="./outputs", type=str)
+    return parser.parse_args()
+
+
+def main(args):
+    root_dir = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/data"
+    model_name = args.model_name
     # model, preprocess = get_model(
     #     model_name="openai-clip:ViT-B/32", device="cuda", root_dir=root_dir
     # )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, preprocess = get_model(
-        model_name="vision-language-models-are-bows/model_zoo/vilt-b32-finetuned-coco",
+        model_name=model_name,
         device=device,
         root_dir=root_dir,
     )
 
-    # Get the VG-R dataset
+    # Relation
     vgr_dataset = VG_Relation(
         image_preprocess=preprocess, download=False, root_dir=root_dir
     )
@@ -199,6 +228,7 @@ def main():
     with open("results.txt", "w") as f:
         f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}\n")
 
+    # Attribution
     vga_dataset = VG_Attribution(
         image_preprocess=preprocess, download=False, root_dir=root_dir
     )
@@ -214,6 +244,22 @@ def main():
     with open("results.txt", "a") as f:
         f.write(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
 
+    coco_dataset = COCO_Order(
+        root_dir=root_dir,
+    )
+
+    coco_loader = DataLoader(coco_dataset, batch_size=16, shuffle=False)
+    # Compute the scores for each test case
+    coco_scores = model.get_retrieval_scores_batched(coco_loader)
+
+    # Evaluate the macro accuracy
+    coco_records = vga_dataset.evaluate_scores(coco_scores)
+    df = pd.DataFrame(coco_records)
+    print(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
+    with open("results.txt", "a") as f:
+        f.write(f"COCO-Order Macro Accuracy: {df.Accuracy.mean()}")
+
 
 if __name__ == "__main__":
+    args = config()
     main()

@@ -1,5 +1,6 @@
 data/
 data2/
+vilt-b32-finetuned-coco/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -24,13 +24,14 @@ def get_model(model_name, device, root_dir=CACHE_DIR):
     elif "vilt" in model_name:
         from .vilt_models import ViLTWrapper
 
-        processor = ViltProcessor.from_pretrained(model_name)
+        processor = ViltProcessor.from_pretrained(os.path.join(root_dir, model_name))
 
         # image_processor = ViltImageProcessor.from_pretrained(
         #     "../model_zoo/vilt-b32-finetuned-coco"
         # )
-        model = ViltForImageAndTextRetrieval.from_pretrained(model_name)
-        model.to(device)
+        model = ViltForImageAndTextRetrieval.from_pretrained(
+            os.path.join(root_dir, model_name)
+        )
         vilt_model = ViLTWrapper(model, processor, device=device)
         image_preprocess = transforms.Compose(
             [
