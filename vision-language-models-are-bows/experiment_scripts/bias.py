@@ -6,12 +6,12 @@ import torch
 import numpy as np
 import json
 import os
-import tqdm
+from tqdm import tqdm
 
 
 # Function to get the likelihood of a sequence of words
 @torch.no_grad()
-def get_sequence_likelihood(model, tokenizer, sentence):
+def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
     loss = model(tokenize_input, labels=tokenize_input).loss
     return torch.exp(-loss).item()
@@ -34,9 +34,11 @@ def main():
     tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
     # load in data
-    root_dir = (
-        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
-    )
+    # root_dir = (
+    #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
+    # )
+
+    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/tool_scripts"
     file0 = os.path.join(root_dir, "true_captions.json")
     with open(file0, "r", encoding="utf-8") as file:
         captions0 = json.load(file)
