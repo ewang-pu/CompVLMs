@@ -33,20 +33,15 @@ def main():
     local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
 
     current = os.getcwd()
-
-    model = GPT2LMHeadModel.from_pretrained(
-        relpath(
-            local_model_path,
-            current,
-        )
+    model_rel = relpath(
+        local_model_path,
+        current,
     )
 
-    tokenizer = GPT2Tokenizer.from_pretrained(
-        relpath(
-            local_tokenizer_path,
-            current,
-        )
-    )
+    tokenizer_rel = relpath(local_tokenizer_path, current)
+    model = GPT2LMHeadModel.from_pretrained(local_model_path)
+
+    tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
 
     # load in data
     # root_dir = (
