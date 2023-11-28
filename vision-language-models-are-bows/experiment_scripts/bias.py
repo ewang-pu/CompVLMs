@@ -26,6 +26,7 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
 
     probs0.to("cuda")
     probs1.to("cuda")
+    probs2.to("cuda")
 
     for i, _ in enumerate(tqdm(captions0)):
         probs0[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
