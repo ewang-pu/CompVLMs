@@ -15,4 +15,4 @@ module load anaconda3/2023.9
 module load cudatoolkit/12.2
 conda activate CompIW # TODO your conda environment 
 
-python vision-language-models-are-bows/experiment_scripts/reproduce.py openai-clip:ViT-B/32 # TODO any bash commands you would run in terminal can go here 
+python vision-language-models-are-bows/experiment_scripts/reproduce.py "openai-clip:ViT-B/32" # TODO any bash commands you would run in terminal can go here 
