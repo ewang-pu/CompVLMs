@@ -52,6 +52,10 @@ def main(args):
         root_dir=root_dir,
     )
 
+    # root_dir = (
+    #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
+    # )
+
     # Relation
     vgr_dataset = VG_Relation(
         image_preprocess=preprocess, download=False, root_dir=root_dir

@@ -36,7 +36,13 @@ class VG_Relation(Dataset):
         download: Whether to download the dataset if it does not exist.
         """
         self.root_dir = root_dir
-        annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
+        # annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
+
+        annotation_file = os.path.join(
+            "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts",
+            "replace-rel-final-1.json",
+        )
+
         image_dir = os.path.join(root_dir, "images")
         if not os.path.exists(image_dir):
             print("Image Directory for VG_Relation could not be found!")
@@ -203,7 +209,12 @@ class VG_Attribution(Dataset):
         root_dir: Directory for the VG-A dataset.
         """
         self.root_dir = root_dir
-        annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
+        # annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
+        annotation_file = os.path.join(
+            "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts",
+            "replace-att-final-0.json",
+        )
+
         image_dir = os.path.join(root_dir, "images")
         if not os.path.exists(image_dir):
             print("Image Directory for VG_Attribution could not be found!")
