@@ -14,9 +14,9 @@ from tqdm import tqdm
 @torch.no_grad()
 def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
-    tokenize_input = tokenize_input.to("cuda")
+    # tokenize_input = tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
-    loss = loss.to("cuda")
+    # loss = loss.to("cuda")
     output = torch.exp(-loss).item()
     return output
 
@@ -27,9 +27,9 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
     probs1 = torch.empty(len(captions1))
     probs2 = torch.empty(len(captions2))
 
-    probs0 = probs0.to("cuda")
-    probs1 = probs1.to("cuda")
-    probs2 = probs2.to("cuda")
+    # probs0 = probs0.to("cuda")
+    # probs1 = probs1.to("cuda")
+    # probs2 = probs2.to("cuda")
 
     for i, _ in enumerate(tqdm(captions0)):
         probs0[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
@@ -52,7 +52,7 @@ def main():
     # tokenizer_rel = relpath(local_tokenizer_path, current)
     model = GPT2LMHeadModel.from_pretrained(local_model_path)
 
-    model.to("cuda")
+    # model.to("cuda")
 
     tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
 
@@ -73,6 +73,10 @@ def main():
     file2 = os.path.join(root_dir, "replace-rel-modified-1.json")
     with open(file2, "r", encoding="utf-8") as file:
         captions2 = json.load(file)
+
+    captions0 = captions0[0:10]
+    captions1 = captions1[0:10]
+    captions2 = captions2[0:10]
 
     probs0, probs1, probs2 = get_prob(captions0, captions1, captions2, model, tokenizer)
 

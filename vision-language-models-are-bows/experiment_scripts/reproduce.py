@@ -244,20 +244,20 @@ def main(args):
     with open("results.txt", "a") as f:
         f.write(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
 
-    coco_dataset = COCO_Order(
-        root_dir=root_dir,
-    )
+    # coco_dataset = COCO_Order(
+    #     root_dir=root_dir,
+    # )
 
-    coco_loader = DataLoader(coco_dataset, batch_size=16, shuffle=False)
-    # Compute the scores for each test case
-    coco_scores = model.get_retrieval_scores_batched(coco_loader)
+    # coco_loader = DataLoader(coco_dataset, batch_size=16, shuffle=False)
+    # # Compute the scores for each test case
+    # coco_scores = model.get_retrieval_scores_batched(coco_loader)
 
-    # Evaluate the macro accuracy
-    coco_records = vga_dataset.evaluate_scores(coco_scores)
-    df = pd.DataFrame(coco_records)
-    print(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
-    with open("results.txt", "a") as f:
-        f.write(f"COCO-Order Macro Accuracy: {df.Accuracy.mean()}")
+    # # Evaluate the macro accuracy
+    # coco_records = vga_dataset.evaluate_scores(coco_scores)
+    # df = pd.DataFrame(coco_records)
+    # print(f"VG-Attribution Macro Accuracy: {df.Accuracy.mean()}")
+    # with open("results.txt", "a") as f:
+    #     f.write(f"COCO-Order Macro Accuracy: {df.Accuracy.mean()}")
 
 
 if __name__ == "__main__":

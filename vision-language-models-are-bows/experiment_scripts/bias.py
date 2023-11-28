@@ -30,7 +30,7 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
     probs1 = probs1.to("cuda")
     probs2 = probs2.to("cuda")
 
-    for i, _ in enumerate(tqdm(captions0)):
+    for i, _ in enumerate(captions0):
         probs0[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
         probs1[i] = get_sequence_likelihood(captions1[i], model, tokenizer)
         probs2[i] = get_sequence_likelihood(captions2[i], model, tokenizer)
@@ -76,7 +76,9 @@ def main():
         captions2 = json.load(file)
 
     probs0, probs1, probs2 = get_prob(captions0, captions1, captions2, model, tokenizer)
-
+    probs0.detach().cpu().numpy()
+    probs1.detach().cpu().numpy()
+    probs2.detach().cpu().numpy()
     np.savez("probabilities.npz", array0=probs0, array1=probs1, array2=probs2)
 
 

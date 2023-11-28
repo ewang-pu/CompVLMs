@@ -22,7 +22,7 @@ def main():
 
     print("Using device: ", device)
     model, preprocess = get_model(
-        model_name="../model_zoo/vilt-b32-finetuned-coco",
+        model_name="vilt-b32-finetuned-coco",
         device=device,
         root_dir=root_dir,
     )
