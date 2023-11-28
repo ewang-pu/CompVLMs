@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import json
 import os
-# from tqdm import tqdm
+from tqdm import tqdm
 # from os.path import relpath
 
 
@@ -17,7 +17,8 @@ def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
     loss = loss.to("cuda")
-    return torch.exp(-loss).item()
+    output = torch.exp(-loss).item()
+    return output
 
 
 def get_prob(captions0, captions1, captions2, model, tokenizer):
@@ -30,7 +31,7 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
     probs1 = probs1.to("cuda")
     probs2 = probs2.to("cuda")
 
-    for i, _ in enumerate(captions0):
+    for i, _ in enumerate(tqdm(captions0)):
         probs0[i] = get_sequence_likelihood(captions0[i], model, tokenizer)
         probs1[i] = get_sequence_likelihood(captions1[i], model, tokenizer)
         probs2[i] = get_sequence_likelihood(captions2[i], model, tokenizer)
@@ -39,8 +40,8 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
 
 
 def main():
-    local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
-    local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
+    local_model_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
+    local_tokenizer_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
 
     # current = os.getcwd()
     # model_rel = relpath(
@@ -60,27 +61,15 @@ def main():
     #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
     # )
 
-    root_dir = (
-        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
-    )
-    file0 = os.path.join(root_dir, "rel-original.json")
-    with open(file0, "r", encoding="utf-8") as file:
-        captions0 = json.load(file)
-
-    file1 = os.path.join(root_dir, "replace-rel-modified-0.json")
-    with open(file1, "r", encoding="utf-8") as file:
-        captions1 = json.load(file)
-
-    file2 = os.path.join(root_dir, "replace-rel-modified-1.json")
-    with open(file2, "r", encoding="utf-8") as file:
-        captions2 = json.load(file)
+    captions0 = ["test"]
+    captions1 = ["test"]
+    captions2 = ["test"]
 
     probs0, probs1, probs2 = get_prob(captions0, captions1, captions2, model, tokenizer)
-    print(probs0)
     probs0 = probs0.detach().cpu().numpy()
     probs1 = probs1.detach().cpu().numpy()
     probs2 = probs2.detach().cpu().numpy()
-    np.savez("probabilities.npz", array0=probs0, array1=probs1, array2=probs2)
+    np.savez("probabilities1.npz", array0=probs0, array1=probs1, array2=probs2)
 
 
 if __name__ == "__main__":
