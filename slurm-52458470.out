@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/experiment_scripts/bias.py", line 86, in <module>
+    main()
+  File "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/experiment_scripts/bias.py", line 82, in main
+    np.savez("probabilities.npz", array0=probs0, array1=probs1, array2=probs2)
+  File "/home/evanwang/.conda/envs/CompIW/lib/python3.11/site-packages/numpy/lib/npyio.py", line 639, in savez
+    _savez(file, args, kwds, False)
+  File "/home/evanwang/.conda/envs/CompIW/lib/python3.11/site-packages/numpy/lib/npyio.py", line 740, in _savez
+    val = np.asanyarray(val)
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/evanwang/.conda/envs/CompIW/lib/python3.11/site-packages/torch/_tensor.py", line 1030, in __array__
+    return self.numpy()
+           ^^^^^^^^^^^^
+TypeError: can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.
