@@ -14,8 +14,12 @@ from tqdm import tqdm
 @torch.no_grad()
 def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    tokenize_input = tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
-    return torch.exp(-loss).item()
+    # loss = loss.to("cuda")
+    output = torch.exp(-loss).item()
+    # output = output.to("cuda")
+    return output
 
 
 def get_prob(captions0, captions1, captions2, model, tokenizer):
@@ -37,8 +41,8 @@ def get_prob(captions0, captions1, captions2, model, tokenizer):
 
 
 def main():
-    local_model_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
-    local_tokenizer_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
+    local_model_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
+    local_tokenizer_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
 
     # current = os.getcwd()
     # model_rel = relpath(
@@ -58,9 +62,7 @@ def main():
     #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
     # )
 
-    root_dir = (
-        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
-    )
+    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/tool_scripts"
     file0 = os.path.join(root_dir, "rel-original.json")
     with open(file0, "r", encoding="utf-8") as file:
         captions0 = json.load(file)
