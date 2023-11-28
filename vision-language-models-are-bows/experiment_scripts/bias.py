@@ -17,7 +17,10 @@ def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
     loss = loss.to("cuda")
-    return torch.exp(-loss).item()
+    # normalize by sequence length
+    per_token_loss = loss / tokenize_input.size(1)
+    per_token_loss = per_token_loss.to("cuda")
+    return torch.exp(-per_token_loss).item()
 
 
 def get_prob(captions0, captions1, captions2, model, tokenizer):
