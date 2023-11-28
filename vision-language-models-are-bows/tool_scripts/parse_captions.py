@@ -16,13 +16,23 @@ def split_json(file_path, chunk_size):
                 )
 
 
-def get_captions(file_path):
+def get_true_captions(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
 
         true_captions = [item["true_caption"] for item in data]
 
         with open("true_captions.json", "w", encoding="utf-8") as new_file:
+            json.dump(true_captions, new_file, ensure_ascii=False, indent=4)
+
+
+def get_false_captions(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+        true_captions = [item["false_caption"] for item in data]
+
+        with open("false_captions.json", "w", encoding="utf-8") as new_file:
             json.dump(true_captions, new_file, ensure_ascii=False, indent=4)
 
 
@@ -49,9 +59,10 @@ def replace_captions(original, new):
 def main():
     root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/data2"
     annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
-    # get_captions(annotation_file)
+    # get_true_captions(annotation_file)
     # split_json("your_large_file.json", 1000)  # Adjust chunk_size as needed
-    replace_captions(annotation_file, "replace-att-modified-0.json")
+    # replace_captions(annotation_file, "replace-att-modified-0.json")
+    get_false_captions(annotation_file)
 
 
 if __name__ == "__main__":

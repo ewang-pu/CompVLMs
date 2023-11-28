@@ -66,11 +66,11 @@ def main():
     root_dir = (
         "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
     )
-    file0 = os.path.join(root_dir, "rel-original.json")
+    file0 = os.path.join(root_dir, "rel-original-true.json")
     with open(file0, "r", encoding="utf-8") as file:
         captions0 = json.load(file)
 
-    file1 = os.path.join(root_dir, "replace-rel-modified-0.json")
+    file1 = os.path.join(root_dir, "rel-original-false.json")
     with open(file1, "r", encoding="utf-8") as file:
         captions1 = json.load(file)
 
