@@ -48,10 +48,10 @@ def replace_captions(original, new):
 
 def main():
     root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/data2"
-    annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
+    annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
     # get_captions(annotation_file)
     # split_json("your_large_file.json", 1000)  # Adjust chunk_size as needed
-    replace_captions(annotation_file, "modified_true_captions.json")
+    replace_captions(annotation_file, "replace-att-modified-0.json")
 
 
 if __name__ == "__main__":
