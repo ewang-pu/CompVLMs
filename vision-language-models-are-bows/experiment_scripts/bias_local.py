@@ -16,9 +16,8 @@ def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
     tokenize_input = tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
-    # loss = loss.to("cuda")
+    loss = loss.to("cuda")
     output = torch.exp(-loss).item()
-    # output = output.to("cuda")
     return output
 
 
