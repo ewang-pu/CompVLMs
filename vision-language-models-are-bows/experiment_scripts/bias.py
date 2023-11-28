@@ -14,7 +14,9 @@ from tqdm import tqdm
 @torch.no_grad()
 def get_sequence_likelihood(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    tokenize_input.to("cuda")
     loss = model(tokenize_input, labels=tokenize_input).loss
+    loss.to("cuda")
     return torch.exp(-loss).item()
 
 
