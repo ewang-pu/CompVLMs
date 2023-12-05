@@ -1,0 +1,2 @@
+VG-Relation Macro Accuracy: 0.268710499017107
+VG-Attribution Macro Accuracy: 0.5684612726896529
