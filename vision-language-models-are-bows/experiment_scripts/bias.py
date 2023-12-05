@@ -6,8 +6,20 @@ import torch
 import numpy as np
 import json
 import os
+import time
 # from tqdm import tqdm
 # from os.path import relpath
+
+
+def time_decorator(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"{func.__name__} executed in {end_time - start_time} seconds")
+        return result
+
+    return wrapper
 
 
 # Function to get the likelihood of a sequence of words
@@ -23,7 +35,20 @@ def get_sequence_likelihood(sentence, model, tokenizer):
     return torch.exp(-per_token_loss).item()
 
 
-def get_prob(captions0, captions1, captions2, model, tokenizer):
+@time_decorator
+def get_prob(captions, model, tokenizer):
+    # tqdm_loader.set_description("Computing retrieval scores")
+    probs = torch.empty(len(captions))
+
+    probs = probs.to("cuda")
+
+    for i, _ in enumerate(captions):
+        probs[i] = get_sequence_likelihood(captions[i], model, tokenizer)
+
+    return probs
+
+
+def get_prob3(captions0, captions1, captions2, model, tokenizer):
     # tqdm_loader.set_description("Computing retrieval scores")
     probs0 = torch.empty(len(captions0))
     probs1 = torch.empty(len(captions1))
@@ -64,26 +89,31 @@ def main():
     # )
 
     root_dir = (
-        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/tool_scripts"
+        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions"
     )
-    file0 = os.path.join(root_dir, "att-original-true.json")
-    with open(file0, "r", encoding="utf-8") as file:
-        captions0 = json.load(file)
 
-    file1 = os.path.join(root_dir, "att-original-false.json")
-    with open(file1, "r", encoding="utf-8") as file:
-        captions1 = json.load(file)
+    file_names = [
+        "rel-original-true-100.json",
+        "rel-original-true-500.json",
+        "rel-original-true-1k.json",
+        "rel-original-true-2k.json",
+        "rel-original-true-4k.json",
+        "rel-original-true-6k.json",
+        "rel-original-true-8k.json",
+        "rel-original-true-10k.json",
+        "rel-original-true-15k.json",
+        "rel-original-true-20k.json",
+        "rel-original-true.json",
+    ]
 
-    file2 = os.path.join(root_dir, "replace-att-modified-0.json")
-    with open(file2, "r", encoding="utf-8") as file:
-        captions2 = json.load(file)
+    for f in file_names:
+        file = os.path.join(root_dir, f)
+        with open(file, "r", encoding="utf-8") as file:
+            captions = json.load(file)
+            _ = get_prob(captions, model, tokenizer)
 
-    probs0, probs1, probs2 = get_prob(captions0, captions1, captions2, model, tokenizer)
-    print(probs0)
-    probs0 = probs0.detach().cpu().numpy()
-    probs1 = probs1.detach().cpu().numpy()
-    probs2 = probs2.detach().cpu().numpy()
-    np.savez("probabilities.npz", array0=probs0, array1=probs1, array2=probs2)
+    # probs0 = probs0.detach().cpu().numpy()
+    # np.savez("probabilities.npz", array0=probs0, array1=probs1, array2=probs2)
 
 
 if __name__ == "__main__":

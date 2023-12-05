@@ -56,13 +56,53 @@ def replace_captions(original, new):
         json.dump(original_data, file, ensure_ascii=False, indent=4)
 
 
+def filter_json_strings(input_file_path, output_file_path, num_items):
+    """
+    Reads a JSON file containing a list of strings, filters a specified percentage of the strings,
+    and writes the filtered list to a new JSON file.
+
+    :param input_file_path: Path to the input JSON file.
+    :param output_file_path: Path to the output JSON file.
+    :param percentage: The percentage of strings to include in the output file.
+    :return: None
+    """
+    try:
+        # Reading data from the input file
+        with open(input_file_path, "r") as file:
+            data = json.load(file)
+
+        if not isinstance(data, list):
+            raise ValueError("JSON file does not contain a list")
+
+        # Calculating the number of items to include
+        # num_items = int(len(data) * (percentage / 100))
+        num_items = num_items
+
+        # Selecting a subset of strings
+        filtered_data = data[:num_items]
+
+        # Writing the filtered data to the output file
+        with open(output_file_path, "w") as file:
+            json.dump(filtered_data, file)
+
+        return "Filtered JSON file created successfully."
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+
+# Example usage:
+# filter_json_strings('path/to/input.json', 'path/to/output.json', 50)
+
+
 def main():
     root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/data2"
     annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
     # get_true_captions(annotation_file)
     # split_json("your_large_file.json", 1000)  # Adjust chunk_size as needed
     # replace_captions(annotation_file, "replace-att-modified-0.json")
-    get_false_captions(annotation_file)
+    # get_false_captions(annotation_file)
+
+    filter_json_strings("rel-original-true.json", "rel-original-true-20k.json", 20000)
 
 
 if __name__ == "__main__":
