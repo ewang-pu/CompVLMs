@@ -100,7 +100,7 @@ def get_nlls(captions, model, tokenizer):
     nlls = torch.empty(len(captions))
     nlls = nlls.to("cuda")
     for i, _ in enumerate(captions):
-        nlls[i] = get_sequence_perplexity(captions[i], model, tokenizer)
+        nlls[i] = get_sequence_nll(captions[i], model, tokenizer)
     return nlls
 
 
@@ -135,12 +135,10 @@ def main():
         file = os.path.join(root_dir, f)
         with open(file, "r", encoding="utf-8") as file:
             captions = json.load(file)
-            nlls.append(
-                get_perplexity(captions, model, tokenizer).detach().cpu().numpy()
-            )
+            nlls.append(get_nlls(captions, model, tokenizer).detach().cpu().numpy())
 
     np.savez(
-        "perplexities.npz",
+        "nlls.npz",
         **{f"array_{i}": arr for i, arr in enumerate(nlls)},
     )
 
