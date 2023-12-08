@@ -41,6 +41,9 @@ def config():
 
 def main(args):
     root_dir = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/data"
+    model_dir = (
+        "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/local_models"
+    )
     model_name = args.model_name
     # model, preprocess = get_model(
     #     model_name="openai-clip:ViT-B/32", device="cuda", root_dir=root_dir
@@ -49,7 +52,7 @@ def main(args):
     model, preprocess = get_model(
         model_name=model_name,
         device=device,
-        root_dir=root_dir,
+        root_dir=model_dir,
     )
 
     # root_dir = (
