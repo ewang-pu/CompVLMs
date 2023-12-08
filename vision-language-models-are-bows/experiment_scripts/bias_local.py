@@ -83,26 +83,33 @@ def main():
     tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
 
     # load in data
+    sentence = "Hello, nice to meet you John"
+    sentence1 = "Colorless green ideas sleep furiously."
+    sentence2 = "In the bustling heart of a vibrant city, a diverse community comes together to celebrate their annual cultural festival, showcasing a rich tapestry of traditions. Local artists display their handcrafted wares while musicians fill the air with melodies. Chefs offer a variety of delicious dishes, highlighting the culinary heritage of the area. Children play in designated safe zones, enjoying interactive educational activities. Volunteers work diligently to ensure a clean and welcoming environment. Environmental consciousness is evident through recycling stations and sustainable practices. This event not only fosters unity and pride among residents but also attracts visitors, boosting local businesses and cultural understanding."
+    tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    loss = model(tokenize_input, labels=tokenize_input).loss
+    print(tokenize_input.size(1))
+    print(loss.item())
 
-    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions"
+    # root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions"
 
-    file_names = [
-        "rel-original-true-100.json",
-        "rel-original-true-500.json",
-        "rel-original-true-1k.json",
-        "rel-original-true-2k.json",
-        "rel-original-true-4k.json",
-        "rel-original-true-6k.json",
-        "rel-original-true-8k.json",
-        "rel-original-true-10k.json",
-        "rel-original-true-15k.json",
-    ]
+    # file_names = [
+    #     "rel-original-true-100.json",
+    #     "rel-original-true-500.json",
+    #     "rel-original-true-1k.json",
+    #     "rel-original-true-2k.json",
+    #     "rel-original-true-4k.json",
+    #     "rel-original-true-6k.json",
+    #     "rel-original-true-8k.json",
+    #     "rel-original-true-10k.json",
+    #     "rel-original-true-15k.json",
+    # ]
 
-    for f in file_names:
-        file = os.path.join(root_dir, f)
-        with open(file, "r", encoding="utf-8") as file:
-            captions = json.load(file)
-            _ = get_prob(captions, model, tokenizer)
+    # for f in file_names:
+    #     file = os.path.join(root_dir, f)
+    #     with open(file, "r", encoding="utf-8") as file:
+    #         captions = json.load(file)
+    #         _ = get_prob(captions, model, tokenizer)
     # file0 = os.path.join(root_dir, "rel-original.json")
     # with open(file0, "r", encoding="utf-8") as file:
     #     captions0 = json.load(file)
