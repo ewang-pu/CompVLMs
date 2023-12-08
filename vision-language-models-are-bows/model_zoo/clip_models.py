@@ -9,7 +9,7 @@ class CLIPWrapper:
     def __init__(self, model, device):
         self.model = model
         self.device = device
-    
+
     @torch.no_grad()
     def get_text_embeddings(self, texts, text_batch_size=256, normalize=False):
         num_text = len(texts)
@@ -17,13 +17,13 @@ class CLIPWrapper:
         tqdm_loader = tqdm(range(0, num_text, text_batch_size))
         tqdm_loader.set_description("Computing text embeddings")
         for i in tqdm_loader:
-            text = texts[i: min(num_text, i+text_batch_size)]
-            text_input = clip.tokenize(text).to(self.device) 
+            text = texts[i : min(num_text, i + text_batch_size)]
+            text_input = clip.tokenize(text).to(self.device)
             text_feats = self.model.encode_text(text_input)
             if normalize:
-                text_feats = F.normalize(text_feats,dim=-1)      
-            text_embeds.append(text_feats)   
-        
+                text_feats = F.normalize(text_feats, dim=-1)
+            text_embeds.append(text_feats)
+
         text_embeds = torch.cat(text_embeds, dim=0)
         return text_embeds
 
@@ -41,7 +41,7 @@ class CLIPWrapper:
 
         image_embeds = torch.cat(image_embeds, dim=0)
         return image_embeds
-    
+
     @torch.no_grad()
     def get_retrieval_scores_dataset(self, loader):
         captions = loader.dataset.text
@@ -50,7 +50,7 @@ class CLIPWrapper:
         scores = image_embeds @ text_embeds.T
         scores = scores.cpu().numpy()
         return scores
-    
+
     @torch.no_grad()
     def get_retrieval_scores_batched(self, joint_loader):
         """Computes the scores for each image_option / caption_option pair in the joint loader.
@@ -70,21 +70,33 @@ class CLIPWrapper:
         for batch in tqdm_loader:
             image_options = []
             for i_option in batch["image_options"]:
-                image_embeddings = self.model.encode_image(i_option.to(self.device)).cpu().numpy() # B x D
-                image_embeddings = image_embeddings / np.linalg.norm(image_embeddings, axis=1, keepdims=True) # B x D
+                image_embeddings = (
+                    self.model.encode_image(i_option.to(self.device)).cpu().numpy()
+                )  # B x D
+                image_embeddings = image_embeddings / np.linalg.norm(
+                    image_embeddings, axis=1, keepdims=True
+                )  # B x D
                 image_options.append(np.expand_dims(image_embeddings, axis=1))
-            
+
             caption_options = []
             for c_option in batch["caption_options"]:
                 caption_tokenized = torch.cat([clip.tokenize(c) for c in c_option])
-                caption_embeddings = self.model.encode_text(caption_tokenized.to(self.device)).cpu().numpy() # B x D
-                caption_embeddings = caption_embeddings / np.linalg.norm(caption_embeddings, axis=1, keepdims=True) # B x D
+                caption_embeddings = (
+                    self.model.encode_text(caption_tokenized.to(self.device))
+                    .cpu()
+                    .numpy()
+                )  # B x D
+                caption_embeddings = caption_embeddings / np.linalg.norm(
+                    caption_embeddings, axis=1, keepdims=True
+                )  # B x D
                 caption_options.append(np.expand_dims(caption_embeddings, axis=1))
-                
-            image_options = np.concatenate(image_options, axis=1) # B x K x D
-            caption_options = np.concatenate(caption_options, axis=1) # B x L x D
-            batch_scores = np.einsum("nkd,nld->nkl", image_options, caption_options) # B x K x L
+
+            image_options = np.concatenate(image_options, axis=1)  # B x K x D
+            caption_options = np.concatenate(caption_options, axis=1)  # B x L x D
+            batch_scores = np.einsum(
+                "nkd,nld->nkl", image_options, caption_options
+            )  # B x K x L
             scores.append(batch_scores)
-        
-        all_scores = np.concatenate(scores, axis=0) # N x K x L
+
+        all_scores = np.concatenate(scores, axis=0)  # N x K x L
         return all_scores
