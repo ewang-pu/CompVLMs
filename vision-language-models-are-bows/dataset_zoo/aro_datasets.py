@@ -36,6 +36,7 @@ class VG_Relation(Dataset):
         download: Whether to download the dataset if it does not exist.
         """
         self.root_dir = root_dir
+
         # annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
 
         annotation_file = os.path.join(

@@ -22,7 +22,7 @@ def time_decorator(func):
     return wrapper
 
 
-# Function to get the likelihood of a sequence of words
+# Function to get the negative log-likelihood of a sequence of words
 @torch.no_grad()
 def get_sequence_nll(sentence, model, tokenizer):
     tokenize_input = tokenizer.encode(sentence, return_tensors="pt")

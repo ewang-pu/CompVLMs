@@ -39,7 +39,7 @@ def get_prob(captions, model, tokenizer):
     # tqdm_loader.set_description("Computing retrieval scores")
     probs = torch.empty(len(captions))
 
-    probs = probs.to("cuda")
+    # probs = probs.to("cuda")
 
     for i, _ in enumerate(captions):
         probs[i] = get_sequence_likelihood(captions[i], model, tokenizer)
@@ -65,6 +65,26 @@ def get_prob3(captions0, captions1, captions2, model, tokenizer):
     return probs0, probs1, probs2
 
 
+@torch.no_grad()
+def get_sequence_perplexity(sentence, model, tokenizer):
+    tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    # tokenize_input = tokenize_input.to("cuda")
+    loss = model(tokenize_input, labels=tokenize_input).loss
+    # loss = loss.to("cuda")
+    # normalize by sequence length
+    # per_token_loss = loss / tokenize_input.size(1)
+    # per_token_loss = per_token_loss.to("cuda")
+    return torch.exp(loss).item()
+
+
+def get_perplexity(captions, model, tokenizer):
+    perps = torch.empty(len(captions))
+    # perps = perps.to("cuda")
+    for i, _ in enumerate(captions):
+        perps[i] = get_sequence_perplexity(captions[i], model, tokenizer)
+    return perps
+
+
 def main():
     local_model_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
     local_tokenizer_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
@@ -86,10 +106,17 @@ def main():
     sentence = "Hello, nice to meet you John"
     sentence1 = "Colorless green ideas sleep furiously."
     sentence2 = "In the bustling heart of a vibrant city, a diverse community comes together to celebrate their annual cultural festival, showcasing a rich tapestry of traditions. Local artists display their handcrafted wares while musicians fill the air with melodies. Chefs offer a variety of delicious dishes, highlighting the culinary heritage of the area. Children play in designated safe zones, enjoying interactive educational activities. Volunteers work diligently to ensure a clean and welcoming environment. Environmental consciousness is evident through recycling stations and sustainable practices. This event not only fosters unity and pride among residents but also attracts visitors, boosting local businesses and cultural understanding."
-    tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
-    loss = model(tokenize_input, labels=tokenize_input).loss
-    print(tokenize_input.size(1))
-    print(loss.item())
+    true = "the elephant is walking on the path"
+    og = "the path is walking on the elephant"
+    new = "the elephant is walking to the left of the path"
+    # tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    # loss = model(tokenize_input, labels=tokenize_input).loss
+    # print(tokenize_input.size(1))
+    # print(loss.item())
+
+    print(get_perplexity([true], model, tokenizer))
+    print(get_perplexity([og], model, tokenizer))
+    print(get_perplexity([new], model, tokenizer))
 
     # root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions"
 
