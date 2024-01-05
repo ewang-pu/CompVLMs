@@ -134,7 +134,11 @@ def get_model(model_name, device, root_dir=CACHE_DIR):
         import open_clip
         from .clip_models import CLIPWrapper
 
-        path = os.path.join(root_dir, "negclip.pth")
+        if ":" in model_name:
+            variant = model_name.split(":")[1]
+            path = os.path.join(root_dir, "negCLIP_" + variant + ".pt")
+        else:
+            path = os.path.join(root_dir, "negCLIP.pt")
         if not os.path.exists(path):
             print("Downloading the NegCLIP model...")
             import gdown
