@@ -130,7 +130,7 @@ def get_model(model_name, device, root_dir=CACHE_DIR):
         image_preprocess = None
         return flava_model, image_preprocess
 
-    elif model_name == "NegCLIP":
+    elif "NegCLIP" in model_name:
         import open_clip
         from .clip_models import CLIPWrapper
 
