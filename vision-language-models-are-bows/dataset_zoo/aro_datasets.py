@@ -37,12 +37,12 @@ class VG_Relation(Dataset):
         """
         self.root_dir = root_dir
 
-        # annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
+        annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
 
-        annotation_file = os.path.join(
-            "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions",
-            "replace-rel-final-1.json",
-        )
+        # annotation_file = os.path.join(
+        #     "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions",
+        #     "replace-rel-final-1.json",
+        # )
 
         image_dir = os.path.join(root_dir, "images")
         if not os.path.exists(image_dir):
