@@ -23,64 +23,63 @@ def replace_captions(original, new):
 
 
 def call_openai_gpt4(prompt, api_key, model="gpt-3.5-turbo", temperature=0.2):
-    # # Construct the curl command
-    # curl_command = [
-    #     "curl",
-    #     "https://api.openai.com/v1/chat/completions",
-    #     "-H",
-    #     "Content-Type: application/json",
-    #     "-H",
-    #     f"Authorization: Bearer {api_key}",
-    #     "-d",
-    #     json.dumps(
-    #         {
-    #             "model": model,
-    #             "messages": [{"role": "user", "content": prompt}],
-    #             "temperature": temperature,
-    #         }
-    #     ),
-    # ]
-
-    # # Execute the curl command
-    # result = subprocess.run(curl_command, capture_output=True, text=True)
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
+    # Construct the curl command
+    curl_command = [
+        "curl",
+        "https://api.openai.com/v1/chat/completions",
+        "-H",
+        "Content-Type: application/json",
+        "-H",
+        f"Authorization: Bearer {api_key}",
+        "-d",
+        json.dumps(
             {
-                "role": "user",
-                "content": prompt,
-            },
-        ],
-        temperature=temperature,
-    )
+                "model": model,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": temperature,
+            }
+        ),
+    ]
+
+    # Execute the curl command
+    result = subprocess.run(curl_command, capture_output=True, text=True)
+    # client = OpenAI()
+    # response = client.chat.completions.create(
+    #     model=model,
+    #     messages=[
+    #         {
+    #             "role": "user",
+    #             "content": prompt,
+    #         },
+    #     ],
+    #     temperature=temperature,
+    # )
     # Check for errors
-    # if result.returncode != 0:
-    #     print("Error:", result.stderr)
-    #     return None
+    if result.returncode != 0:
+        print("Error:", result.stderr)
+        return None
 
     # Parse the JSON response
-    # response = json.loads(result.stdout)
+    response = json.loads(result.stdout)
 
     # Extract the 'content' field
 
-    return response.choices[0].message.content
-    # if "choices" in response and len(response["choices"]) > 0:
-    #     if "message" in response["choices"][0]:
-    #         return response["choices"][0]["message"]["content"]
-    #     else:
-    #         return "No 'message' field in response."
-    # else:
-    #     return "No 'choices' in response."
+    if "choices" in response and len(response["choices"]) > 0:
+        if "message" in response["choices"][0]:
+            return response["choices"][0]["message"]["content"]
+        else:
+            return "No 'message' field in response."
+    else:
+        return "No 'choices' in response."
 
 
 def main():
     api_key = os.environ.get("OPENAI_API_KEY")
     # print(api_key)
 
-    file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
+    # file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
 
-    # file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
+    file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
     with open(file_path, "r") as file:
         data = json.load(file)
     template = """I will give you an input caption describing a scene. Your task 

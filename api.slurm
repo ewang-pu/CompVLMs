@@ -13,6 +13,5 @@ module purge
 module load anaconda3/2023.9
 module load cudatoolkit/12.2
 conda activate CompIW # TODO your conda environment 
-export OPENAI_API_KEY = "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"
 
-python gpt/call.py
+python gpt/call-cluster.py
