@@ -15,8 +15,9 @@ module load anaconda3/2023.9
 module load cudatoolkit/12.2
 conda activate CompIW # TODO your conda environment 
 
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:b512_epoch1" # TODO any bash commands you would run in terminal can go here 
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:b512_epoch2"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:b512_epoch3"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:b512_epoch4"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:b512_epoch5"
+
+python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:1e-8_epoch1" # TODO any bash commands you would run in terminal can go here 
+python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:1e-8_epoch2"
+python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:1e-8_epoch3"
+python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:1e-8_epoch4"
+python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:1e-8_epoch5" 
