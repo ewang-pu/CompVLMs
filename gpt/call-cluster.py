@@ -79,7 +79,7 @@ def main():
 
     # file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
 
-    file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
+    file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true-10.json"
     with open(file_path, "r") as file:
         data = json.load(file)
     template = """I will give you an input caption describing a scene. Your task 
