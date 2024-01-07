@@ -102,7 +102,7 @@ def main():
     # replace_captions(annotation_file, "replace-att-modified-0.json")
     # get_false_captions(annotation_file)
 
-    filter_json_strings("rel-original-true.json", "rel-original-true-20k.json", 20000)
+    filter_json_strings("rel-original-true.json", "rel-original-true-90.json", 90)
 
 
 if __name__ == "__main__":

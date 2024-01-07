@@ -1,0 +1,13 @@
+ Volume in drive C is OS
+ Volume Serial Number is 7424-8292
+
+ Directory of C:\Users\ewang\OneDrive\Desktop\Fall 2023\CompVLMs\vision-language-models-are-bows\tool_scripts
+
+01/07/2024  11:32 AM    <DIR>          .
+01/07/2024  11:32 AM    <DIR>          ..
+01/07/2024  11:27 AM             1,721 gpt.py
+12/05/2023  01:10 AM             3,907 parse_captions.py
+01/07/2024  11:32 AM                 0 print
+12/05/2023  01:07 AM         1,049,085 rel-original-true.json
+               4 File(s)      1,054,713 bytes
+               2 Dir(s)  537,162,387,456 bytes free

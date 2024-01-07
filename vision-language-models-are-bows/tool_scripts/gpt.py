@@ -1,4 +1,24 @@
-I will give you an input caption describing a scene. Your task 
+import openai
+
+
+def call_openai_gpt4(prompt):
+    openai.api_key = ""  # Replace with your actual API key
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4.0-turbo",  # Use an appropriate GPT-4 model
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        return response["choices"][0]["message"]["content"]
+    except Exception as e:
+        return str(e)
+
+
+def main():
+    user_prompt = """I will give you an input caption describing a scene. Your task 
 is to:
 1. Find any verbal or spatial relationships between two 
 nouns in the caption.
@@ -22,6 +42,10 @@ Relationships: ['eating']
 Selected relationship: eating
 New relationship: jumping over
 New caption: the horse is jumping over the grass
-Original caption: the banana is on the plate
+Original caption: """
+    response = call_openai_gpt4(user_prompt)
+    print("Response from GPT-4:", response)
 
 
+if __name__ == "__main__":
+    main()
