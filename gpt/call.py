@@ -77,8 +77,9 @@ def call_openai_gpt4(prompt, api_key, model="gpt-3.5-turbo", temperature=0.2):
 def main():
     api_key = os.environ.get("OPENAI_API_KEY")
 
-    file_path = "../vision-language-models-are-bows/my_captions/archive/rel-original-true-10.json"
+    # file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true-10.json"
 
+    file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true-10.json"
     with open(file_path, "r") as file:
         data = json.load(file)
     template = """I will give you an input caption describing a scene. Your task 
