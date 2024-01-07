@@ -113,7 +113,7 @@ Original caption: """
     key_phrase = "New caption: "
 
     start_time = time.time()
-    for string in tqdm(data, miniters=20):
+    for string in tqdm(data, miniters=1000):
         user_prompt = template + string
         response = call_openai_gpt4(user_prompt, api_key)
         if response:
