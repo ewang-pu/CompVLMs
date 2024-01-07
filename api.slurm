@@ -13,5 +13,5 @@ module purge
 module load anaconda3/2023.9
 conda activate CompIW # TODO your conda environment 
 
-nslookup api.openai.com
+ping api.openai.com
 # python gpt/call-cluster.py
