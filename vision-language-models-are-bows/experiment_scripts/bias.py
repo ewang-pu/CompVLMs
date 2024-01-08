@@ -125,10 +125,11 @@ def main():
         "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions"
     )
     file_names = [
-        "rel-original-true.json",
-        "rel-original-false.json",
-        "replace-rel-modified-1.json",
-        "replace-rel-modified-2.json",
+        # "rel-original-true.json",
+        # "rel-original-false.json",
+        # "replace-rel-modified-1.json",
+        # "replace-rel-modified-2.json",
+        "rel-gpt-0.json"
     ]
     nlls = []
     for i, f in enumerate(file_names):
@@ -138,7 +139,7 @@ def main():
             nlls.append(get_nlls(captions, model, tokenizer).detach().cpu().numpy())
 
     np.savez(
-        "nlls.npz",
+        "rel-gpt-0-nlls.npz",
         **{f"array_{i}": arr for i, arr in enumerate(nlls)},
     )
 

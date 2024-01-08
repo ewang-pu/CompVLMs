@@ -6,6 +6,27 @@ from openai import OpenAI
 from tqdm import tqdm
 
 
+def save_checkpoint(
+    responses, new_captions, current_index, checkpoint_path="checkpoint.json"
+):
+    with open(checkpoint_path, "w") as f:
+        json.dump(
+            {
+                "responses": responses,
+                "new_captions": new_captions,
+                "current_index": current_index,
+            },
+            f,
+        )
+
+
+def load_checkpoint(checkpoint_path="checkpoint.json"):
+    if os.path.exists(checkpoint_path):
+        with open(checkpoint_path, "r") as f:
+            return json.load(f)
+    return None
+
+
 def replace_captions(original, new):
     with open(original, "r", encoding="utf-8") as file:
         original_data = json.load(file)
@@ -109,12 +130,22 @@ New relationship: jumping over
 New caption: the horse is jumping over the grass
 Original caption: """
 
-    responses = []
-    new_captions = []
+    checkpoint = load_checkpoint()
+    if checkpoint:
+        responses = checkpoint["responses"]
+        new_captions = checkpoint["new_captions"]
+        start_index = checkpoint["current_index"] + 1
+    else:
+        responses = []
+        new_captions = []
+        start_index = 0
+
     key_phrase = "New caption: "
 
     start_time = time.time()
-    for string in tqdm(data, miniters=20):
+    for i, string in enumerate(
+        tqdm(data[start_index:], miniters=50), start=start_index
+    ):
         user_prompt = template + string
         response = call_openai_gpt4(user_prompt, api_key)
         if response:
@@ -128,6 +159,9 @@ Original caption: """
                 new_captions.append(new)
             else:
                 new_captions.append("Error in GPT output")
+
+        if i % 1000 == 0:
+            save_checkpoint(responses, new_captions, i)
 
     end_time = time.time()
 

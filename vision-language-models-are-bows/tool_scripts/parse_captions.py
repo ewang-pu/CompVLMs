@@ -99,10 +99,10 @@ def main():
     annotation_file = os.path.join(root_dir, "visual_genome_attribution.json")
     # get_true_captions(annotation_file)
     # split_json("your_large_file.json", 1000)  # Adjust chunk_size as needed
-    # replace_captions(annotation_file, "replace-att-modified-0.json")
+    replace_captions(annotation_file, "rel-gpt-0.json")
     # get_false_captions(annotation_file)
 
-    filter_json_strings("rel-original-true.json", "rel-original-true-90.json", 90)
+    # filter_json_strings("rel-original-true.json", "rel-original-true-90.json", 90)
 
 
 if __name__ == "__main__":
