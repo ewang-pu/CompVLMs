@@ -116,7 +116,7 @@ requirements:
 as different as possible from the original scene.
 2. The new caption must be fluent and grammatically 
 correct.
-3. The new caption must be logically plausible.
+3. The new caption must be as logically plausible and likely as possible. In other words, maximize the probability of the new caption.
 Here are some examples:
 Original caption: the man is in front of the building
 Relationships: ["in front of"]
@@ -166,7 +166,7 @@ Original caption: """
     end_time = time.time()
 
     response_file_path = "gpt-responses.json"
-    caption_file_path = "rel-gpt-0.json"
+    caption_file_path = "rel-gpt-1.json"
 
     with open(response_file_path, "w") as file:
         json.dump(responses, file)
