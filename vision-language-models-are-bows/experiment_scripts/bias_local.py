@@ -12,6 +12,15 @@ from tqdm import tqdm
 import time
 
 
+@torch.no_grad()
+def get_sequence_nll(sentence, model, tokenizer):
+    tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    tokenize_input = tokenize_input.to("cuda")
+    loss = model(tokenize_input, labels=tokenize_input).loss
+    # loss = loss.to("cuda")
+    return loss.item()
+
+
 def time_decorator(func):
     def wrapper(*args, **kwargs):
         start_time = time.time()
@@ -85,6 +94,14 @@ def get_perplexity(captions, model, tokenizer):
     return perps
 
 
+def get_nlls(captions, model, tokenizer):
+    nlls = torch.empty(len(captions))
+    nlls = nlls.to("cuda")
+    for i, _ in enumerate(captions):
+        nlls[i] = get_sequence_nll(captions[i], model, tokenizer)
+    return nlls
+
+
 def main():
     local_model_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt_model"
     local_tokenizer_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/local_models/gpt2/gpt2_tokenizer"
@@ -98,27 +115,49 @@ def main():
     # tokenizer_rel = relpath(local_tokenizer_path, current)
     model = GPT2LMHeadModel.from_pretrained(local_model_path)
 
-    # model.to("cuda")
+    model.to("cuda")
 
     tokenizer = GPT2Tokenizer.from_pretrained(local_tokenizer_path)
 
-    # load in data
-    sentence = "Hello, nice to meet you John"
-    sentence1 = "Colorless green ideas sleep furiously."
-    sentence2 = "In the bustling heart of a vibrant city, a diverse community comes together to celebrate their annual cultural festival, showcasing a rich tapestry of traditions. Local artists display their handcrafted wares while musicians fill the air with melodies. Chefs offer a variety of delicious dishes, highlighting the culinary heritage of the area. Children play in designated safe zones, enjoying interactive educational activities. Volunteers work diligently to ensure a clean and welcoming environment. Environmental consciousness is evident through recycling stations and sustainable practices. This event not only fosters unity and pride among residents but also attracts visitors, boosting local businesses and cultural understanding."
-    true = "the elephant is walking on the path"
-    og = "the path is walking on the elephant"
-    new = "the elephant is walking to the left of the path"
-    # tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
-    # loss = model(tokenize_input, labels=tokenize_input).loss
-    # print(tokenize_input.size(1))
-    # print(loss.item())
+    # # load in data
+    # sentence = "Hello, nice to meet you John"
+    # sentence1 = "Colorless green ideas sleep furiously."
+    # sentence2 = "In the bustling heart of a vibrant city, a diverse community comes together to celebrate their annual cultural festival, showcasing a rich tapestry of traditions. Local artists display their handcrafted wares while musicians fill the air with melodies. Chefs offer a variety of delicious dishes, highlighting the culinary heritage of the area. Children play in designated safe zones, enjoying interactive educational activities. Volunteers work diligently to ensure a clean and welcoming environment. Environmental consciousness is evident through recycling stations and sustainable practices. This event not only fosters unity and pride among residents but also attracts visitors, boosting local businesses and cultural understanding."
+    # true = "the elephant is walking on the path"
+    # og = "the path is walking on the elephant"
+    # new = "the elephant is walking to the left of the path"
+    # # tokenize_input = tokenizer.encode(sentence, return_tensors="pt")
+    # # loss = model(tokenize_input, labels=tokenize_input).loss
+    # # print(tokenize_input.size(1))
+    # # print(loss.item())
 
-    print(get_perplexity([true], model, tokenizer))
-    print(get_perplexity([og], model, tokenizer))
-    print(get_perplexity([new], model, tokenizer))
+    # print(get_perplexity([true], model, tokenizer))
+    # print(get_perplexity([og], model, tokenizer))
+    # print(get_perplexity([new], model, tokenizer))
 
-    # root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions"
+    root_dir = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions"
+
+    file_names = [
+        "rel-original-true.json",
+        "rel-original-false.json",
+        "replace-rel-modified-0.json",
+        "replace-rel-modified-1.json",
+        # "replace-rel-modified-1.json",
+        # "replace-rel-modified-2.json",
+        "rel-gpt-2.json",
+    ]
+    nlls = []
+    limit = 1000
+    for i, f in enumerate(file_names):
+        file = os.path.join(root_dir, f)
+        with open(file, "r", encoding="utf-8") as file:
+            captions = json.load(file)[:limit]
+            nlls.append(get_nlls(captions, model, tokenizer).detach().cpu().numpy())
+
+    np.savez(
+        "Jan8Test.npz",
+        **{f"array_{i}": arr for i, arr in enumerate(nlls)},
+    )
 
     # file_names = [
     #     "rel-original-true-100.json",
