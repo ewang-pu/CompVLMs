@@ -230,13 +230,13 @@ def main(args):
         "around",
     ]
     df = pd.DataFrame(vgr_records)
-    with open("results.txt", "a") as f:
-        f.write(str(len(df)) + "\n")
+    # with open("results.txt", "a") as f:
+    #     f.write(str(len(df)) + "\n")
     df = df[~df.Relation.isin(symmetric)]
 
     with open("results.txt", "a") as f:
         f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}\n")
-        f.write(str(len(df)))
+        # f.write(str(len(df)))
 
     # Attribution
     # vga_dataset = VG_Attribution(
