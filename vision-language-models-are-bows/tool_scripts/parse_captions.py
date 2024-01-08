@@ -45,6 +45,10 @@ def replace_captions(original, new):
         modified_captions = json.load(file)
 
     # Step 2: Replace 'false_caption' in the original data
+
+    # slice original data to be same length as modified captions
+    original_data = original_data[: len(modified_captions)]
+
     for i, item in enumerate(original_data):
         if i < len(modified_captions):
             item["false_caption"] = modified_captions[i]
@@ -99,7 +103,7 @@ def main():
     annotation_file = os.path.join(root_dir, "visual_genome_relation.json")
     # get_true_captions(annotation_file)
     # split_json("your_large_file.json", 1000)  # Adjust chunk_size as needed
-    replace_captions(annotation_file, "rel-gpt-0.json")
+    replace_captions(annotation_file, "rel-modified-1-fixed.json")
     # get_false_captions(annotation_file)
 
     # filter_json_strings("rel-original-true.json", "rel-original-true-90.json", 90)

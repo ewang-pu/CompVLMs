@@ -43,7 +43,7 @@ def replace_captions(original, new):
             break  # Break if there are more items in original_data than in modified_captions
 
 
-def call_openai_gpt4(prompt, api_key, model="gpt-3.5-turbo", temperature=0.2):
+def call_openai_gpt4(prompt, api_key, model="gpt-4", temperature=0.2):
     # # Construct the curl command
     # curl_command = [
     #     "curl",
@@ -99,7 +99,7 @@ def main():
     api_key = os.environ.get("OPENAI_API_KEY")
     # print(api_key)
 
-    file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
+    file_path = "C:/Users/ewang/OneDrive/Desktop/Fall 2023/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true-2k.json"
 
     # file_path = "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions/archive/rel-original-true.json"
     with open(file_path, "r") as file:
@@ -109,7 +109,7 @@ is to:
 1. Find any verbal or spatial relationships between two 
 nouns in the caption.
 2. Replace the selected relationship with a new 
-relationship to make a new caption.
+relationship to make a new caption. (Avoid replacing with the relationship "inside")
 The new caption must meet the following three 
 requirements:
 1. The new caption must be describing a scene that is 
@@ -128,6 +128,7 @@ Relationships: ['eating']
 Selected relationship: eating
 New relationship: jumping over
 New caption: the horse is jumping over the grass
+
 Original caption: """
 
     checkpoint = load_checkpoint()
