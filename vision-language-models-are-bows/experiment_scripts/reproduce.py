@@ -232,7 +232,7 @@ def main(args):
     df = pd.DataFrame(vgr_records)
     # with open("results.txt", "a") as f:
     #     f.write(str(len(df)) + "\n")
-    df = df[~df.Relation.isin(symmetric)]
+    # df = df[~df.Relation.isin(symmetric)]
 
     with open("results.txt", "a") as f:
         f.write(f"VG-Relation Macro Accuracy: {df.Accuracy.mean()}\n")

@@ -10,7 +10,7 @@
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --mail-user=evanwang@princeton.edu # TODO add netid if you want emails, or delete these past 3 lines
 
-module purge
+module purges
 module load anaconda3/2023.9
 module load cudatoolkit/12.2
 conda activate CompIW # TODO your conda environment 
