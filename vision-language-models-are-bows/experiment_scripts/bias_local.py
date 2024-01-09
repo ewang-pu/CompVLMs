@@ -134,7 +134,7 @@ def main():
 
     true = "the man is wearing the shirt"
     og = "the shirt is wearing the man"
-    new = "the man is holding the shirt"
+    new = "the man is packing the shirt"
 
     print(get_perplexity([true], model, tokenizer))
     print(get_perplexity([og], model, tokenizer))
