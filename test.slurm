@@ -19,8 +19,8 @@ python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_n
 
 python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "vilt-b32-finetuned-coco"
 
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch1"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch2"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch3"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch4"
-python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch5"
+# python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch1"
+# python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch2"
+# python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch3"
+# python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch4"
+# python vision-language-models-are-bows/experiment_scripts/reproduce.py --model_name "NegCLIP:epoch5"
