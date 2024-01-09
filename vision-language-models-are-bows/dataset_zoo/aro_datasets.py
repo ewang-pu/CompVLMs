@@ -46,7 +46,7 @@ class VG_Relation(Dataset):
 
         annotation_file = os.path.join(
             "/scratch/gpfs/evanwang/CompVLMs/vision-language-models-are-bows/my_captions",
-            "rel-gpt-0.json",
+            "rel-gpt-final-0.json",
         )
 
         # annotation_file = os.path.join(
