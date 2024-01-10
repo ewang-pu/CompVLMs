@@ -132,9 +132,9 @@ def main():
     # og = "the path is walking on the elephant"
     # new = "the elephant is walking to the left of the path"
 
-    true = "the man is wearing the shirt"
-    og = "the shirt is wearing the man"
-    new = "the man is packing the shirt"
+    true = "the cat is on the sink"
+    og = "the sink is on the cat"
+    new = "the cat is under the sink"
 
     print(get_perplexity([true], model, tokenizer))
     print(get_perplexity([og], model, tokenizer))
