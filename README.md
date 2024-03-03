@@ -1,4 +1,5 @@
-CompGPT: Probing the Compositional Understanding of Visual Language Models
+## CompGPT: Probing the Compositional Understanding of Visual Language Models
+
 Overview
 This repository contains the code and datasets used in the independent research project titled "CompGPT: Probing the Compositional Understanding of Visual Language Models" by Evan Wang under the advisement of Felix Heide. The research focuses on the limitations of Vision Language Models (VLMs) in understanding compositional relations, i.e., how elements in an image relate to each other. This project extends evaluations on new models, investigating current methods to evaluate and improve compositional understanding in VLMs, and refining these methods to contribute new data and directions on the question of compositional awareness in VLMs.
 
