@@ -15,3 +15,10 @@ This repository is structured to facilitate the evaluation and improvement of co
 
 Acknowledgements
 Special thanks to Dr. Felix Heide for his invaluable guidance throughout the research, as well as to all contributors and participants in the study for their efforts to advance the understanding of compositional understanding in visual language models.
+
+# Research Paper
+The full reseach paper can be viewed here: [Link to my paper](CompGPT_Report.pdf)
+For a tldr:
+* The Vision-and-Language Transformer, even with word patch alignment training, does not perform much better than other VLMs on compositional reasoning tasks.
+* Existing datasets for evaluating compositional reasoning are biased: "blind" models can outperform VLMs via perplexity calculations
+* LLMs with natural language understanding provide a method of reducing these biases
